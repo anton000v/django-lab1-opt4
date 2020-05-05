@@ -1,0 +1,23 @@
+{% extends 'FilesApp/base_template.html' %}
+{% block content %}
+<div class='my-4'>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Название</th>
+            <th scope="col">Описание</th>
+            <th scope="col">Кол-во скачиваний</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for file in all_files %}
+                <tr>
+                    <td>{{ file.up_file }}</td>
+                    <td>{{ file.title }}</td>
+                    <td>{{ file.download_counter }} </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

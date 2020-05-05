@@ -1,0 +1,53 @@
+{% extends 'FilesApp/base_template.html' %}
+
+{% block content %}
+    <div class='my-3'>
+        {% if user.is_authenticated %}
+            <p> Т.к. вы - админ, Вы можете:</p>
+            <ul>
+                <li><a href="{% url 'admin-statistics' %}">Посмотреть статистику</a></li>
+                <li><a href="admin/FilesApp/file/add/">Добавить файл</a></li>
+                <li><a href="admin/logout">Выйти из админки</a></li>
+            </ul>
+        {% endif %}
+        <h4 class='my-4'>Файлы, доступные для скачивания:</h4>
+        {% for file in all_files %}
+            <div class="card text-center my-4">
+                <div class="card-header">
+                    {{ file.title }}
+                </div>
+                <div class="card-body">
+                    <!-- <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+                    <a href="{{ file.up_file.url }}" download><button class='my-3 btn btn-lg btn-block' onclick="add_download('{{ file.id }}');">Скачать<br>{{ file.up_file }}</button></a>
+                    <!-- Размер: {{ file.size|filesizeformat }} -->
+                </div>
+                <div class="card-footer text-muted">
+                {% if user.is_superuser %}
+                    {{ file.download_counter }} скачиваний
+                {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    function add_download(id){
+        $.ajax({
+            type: 'GET',
+            async: true,
+            url: '/ajax/add-download/',
+            data: {
+                'id' : id,
+            },
+            error: function(data) {
+                alert('Some error with ajax request.');
+            },
+            dataType: 'json',
+            });
+    };
+</script>
+
+{% endblock %}
